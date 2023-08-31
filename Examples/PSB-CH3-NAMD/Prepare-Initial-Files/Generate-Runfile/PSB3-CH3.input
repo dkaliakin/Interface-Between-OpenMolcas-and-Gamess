@@ -1,0 +1,11 @@
+>> EXPORT MOLCAS_MOLDEN=ON
+>> COPY $InpDir/$Project.xyz $WorkDir
+
+ &GATEWAY
+ 	Coord = $Project.xyz
+	basis = 6-31G*
+	group =  C1
+	RICD
+
+ &SEWARD
+	DOANA

@@ -1,0 +1,64 @@
+>> EXPORT MOLCAS_MOLDEN=ON
+
+>> COPY $InpDir/$Project.RunFile .
+>> COPY $InpDir/$Project.velocity.xyz .
+>> COPY $InpDir/$Project.JobIph .
+
+>> shell $InpDir/GUTS/slice_in2.sh
+>> shell $InpDir/GUTS/slice_gamess.sh
+>> COPY $InpDir/GEOMETRY.txt .
+>> COPY $InpDir/NROOTS.txt .
+>> COPY $InpDir/NCI.txt .
+>> COPY $InpDir/RLXROOT.txt .
+
+>> shell $InpDir/GUTS/gamess_init_root.sh
+
+>>Foreach A in (1..200)
+
+>> shell $GAMESS_LOCATION/rungms-dev $InpDir/$Project.G.tmp.inp 01 12 12 > $InpDir/$Project.G.tmp.out
+>> shell $InpDir/GUTS/update_gamess_vec.sh
+>> shell $InpDir/GUTS/get_gradient.sh
+>> shell $InpDir/GUTS/get_pot_energy.sh
+>> shell $InpDir/GUTS/get_S0_and_S1_energy.sh
+>> shell $InpDir/GUTS/get_S0_and_S1_coeff.sh
+
+>> COPY $InpDir/GRADIENT.txt .
+>> COPY $InpDir/POT_ENERGY.txt .
+>> COPY $InpDir/ROOTS_E.txt .
+>> COPY $InpDir/ROOTS_C.txt .
+
+&Surfacehop
+ tully
+ decoherence = 0.1
+ FRANDOM=1.0
+
+>> IF (-FILE HOP.txt)
+
+>> COPY RLXROOT.txt $InpDir/RLXROOT.txt
+>> shell $InpDir/GUTS/slice_gamess_hop.sh 
+>> shell $InpDir/GUTS/update_gamess_geo.sh
+>> shell $GAMESS_LOCATION/rungms-dev $InpDir/$Project.G.tmp.inp 01 12 12 > $InpDir/$Project.G.tmp.out
+>> shell $InpDir/GUTS/update_gamess_vec.sh
+>> shell $InpDir/GUTS/get_gradient.sh
+>> shell $InpDir/GUTS/get_pot_energy.sh
+>> shell $InpDir/GUTS/get_S0_and_S1_energy.sh
+>> shell $InpDir/GUTS/get_S0_and_S1_coeff.sh
+
+>> COPY $InpDir/GRADIENT.txt .
+>> COPY $InpDir/POT_ENERGY.txt .
+>> COPY $InpDir/ROOTS_E.txt .
+>> COPY $InpDir/ROOTS_C.txt .
+
+>> RM HOP.txt
+>> ENDIF
+
+&Dynamix
+  Velver
+  DT=41.322314
+  velo=1
+  Ther=0
+
+>> COPY GEOMETRY.txt $InpDir/GEOMETRY.txt
+>> shell $InpDir/GUTS/update_gamess_geo.sh
+
+>>End Do

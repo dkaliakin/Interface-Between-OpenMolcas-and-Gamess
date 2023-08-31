@@ -1,0 +1,22 @@
+>> EXPORT MOLCAS_MOLDEN=ON
+>> COPY $InpDir/$Project.xyz $WorkDir
+>> COPY $InpDir/$Project.key $WorkDir
+
+ &GATEWAY
+ 	Tinker
+	basis = 6-31G*
+	group =  C1
+	RICD
+
+ &SEWARD
+	DOANA
+ &Espf
+	External = Tinker
+
+ &SCF
+
+ &RASSCF
+  nactel= 2 0 0
+  ras2= 2
+  inactive=70
+  ciroot=2 2 1
