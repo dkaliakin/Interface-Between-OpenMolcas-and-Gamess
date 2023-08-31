@@ -1,0 +1,28 @@
+>> EXPORT MOLCAS_MOLDEN=ON
+>> COPY $InpDir/$Project.xyz $WorkDir
+>> COPY $InpDir/$Project.key $WorkDir
+
+ &GATEWAY
+ 	Tinker
+	basis = 6-31G*
+	group =  C1
+	RICD
+
+ &SEWARD
+	DOANA
+ &Espf
+	External = Tinker
+
+ &SCF
+ charge=0
+! the charge here specified
+! for case of MTDP
+
+ &RASSCF
+  nactel= 2 0 0
+  ras2= 2
+  ciroot=2 2 1
+! SSR(2,2) uses only 2 CI coeffiecients per 2 states
+! Thus, you always have to use these particular
+! settings of &RASSCF when you create
+! dummy JobIph file used in this interface.

@@ -1,0 +1,98 @@
+###############
+! Most of the parts of this input should not be changed.
+! Only change parts where comments point you too.
+! This structure of OpenMolcas input file
+! works both for QM/MM and gas phase calculations.
+##############
+>> EXPORT MOLCAS_MOLDEN=ON
+
+>> COPY $InpDir/$Project.RunFile .
+>> COPY $InpDir/$Project.velocity.xyz .
+>> COPY $InpDir/$Project.JobIph .
+
+>> shell $InpDir/GUTS/slice_in2.sh
+>> shell $InpDir/GUTS/slice_gamess.sh
+>> COPY $InpDir/GEOMETRY.txt .
+>> COPY $InpDir/NROOTS.txt .
+>> COPY $InpDir/NCI.txt .
+>> COPY $InpDir/RLXROOT.txt .
+
+>> shell $InpDir/GUTS/gamess_init_root.sh
+
+>>Foreach A in (1..500)
+########
+! Change 500 the number of time steps
+! that you need in your simulation
+########
+>> shell $GAMESS_LOCATION/rungms-dev $InpDir/$Project.G.tmp.inp 01 12 12 > $InpDir/$Project.G.tmp.out
+########
+# "01 12 12" stands for:
+# "01" is build number in GAMESS executable such as "gamess.01.x"
+# "12 12" is number of CPUs per node and total number of CPUs
+########
+>> shell $InpDir/GUTS/update_gamess_vec.sh
+>> shell $InpDir/GUTS/get_gradient.sh
+>> shell $InpDir/GUTS/get_pot_energy.sh
+>> shell $InpDir/GUTS/get_S0_and_S1_energy.sh
+>> shell $InpDir/GUTS/get_S0_and_S1_coeff.sh
+
+>> COPY $InpDir/GRADIENT.txt .
+>> COPY $InpDir/POT_ENERGY.txt .
+>> COPY $InpDir/ROOTS_E.txt .
+>> COPY $InpDir/ROOTS_C.txt .
+
+&Surfacehop
+ tully
+ 
+# Only Tully surfacehop is supported in this
+# interface
+
+ decoherence = 0.1
+ 
+# You can change number of decoherence, but it is
+# not recommended
+
+ FRANDOM=1.0
+ 
+# FRANDOM could be changed. Remember that this
+# function is for test purposes only.
+# Do not include it when you submit 
+# your actual production trajectories.
+
+>> IF (-FILE HOP.txt)
+
+>> COPY RLXROOT.txt $InpDir/RLXROOT.txt
+>> shell $InpDir/GUTS/slice_gamess_hop.sh 
+>> shell $InpDir/GUTS/update_gamess_geo.sh
+>> shell $GAMESS_LOCATION/rungms-dev $InpDir/$Project.G.tmp.inp 01 12 12 > $InpDir/$Project.G.tmp.out
+
+# Change "12 12" if you want to use other number of CPUs.
+# do it here and in the line above.
+
+>> shell $InpDir/GUTS/update_gamess_vec.sh
+>> shell $InpDir/GUTS/get_gradient.sh
+>> shell $InpDir/GUTS/get_pot_energy.sh
+>> shell $InpDir/GUTS/get_S0_and_S1_energy.sh
+>> shell $InpDir/GUTS/get_S0_and_S1_coeff.sh
+
+>> COPY $InpDir/GRADIENT.txt .
+>> COPY $InpDir/POT_ENERGY.txt .
+>> COPY $InpDir/ROOTS_E.txt .
+>> COPY $InpDir/ROOTS_C.txt .
+
+>> RM HOP.txt
+>> ENDIF
+
+&Dynamix
+  Velver
+  DT=41.34
+  velo=1
+  Ther=0
+# Any of the keywords above can be changed.
+# However, these are the keywords we tested our interface with
+# and did all of our interface implementations so far.
+
+>> COPY GEOMETRY.txt $InpDir/GEOMETRY.txt
+>> shell $InpDir/GUTS/update_gamess_geo.sh
+
+>>End Do

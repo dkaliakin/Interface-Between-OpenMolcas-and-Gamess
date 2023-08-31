@@ -1,0 +1,7 @@
+NROOTS 2
+RLXROOT 2
+NCI 2
+! In SSR(2,2) the you always keep "NROOTS 2" and "NCI 2"
+! However, you can change "RLXROOT 2" to "RLXROOT 1" if you are restarting NAMD simulation
+! after the S1 to S0 hop, so you can continue your simulation on
+! ground state.
