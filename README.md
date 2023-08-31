@@ -1,4 +1,4 @@
-# Interface between OpenMOLCAS and GAMESS-US/Tinker
+# Interface between OpenMolcas and GAMESS-US/Tinker
 
 This interface is created to link OpenMolcas and the GAMESS-US/Tinker software packages and enable the state-interaction state-averaged REKS (SI-SA-REKS or, for short, SSR) nonadibatic molecular dynamics (NAMD) simulations. More specifically, the interface exploits the availability of the SSR energy and analytical gradient in GAMESS-US. Thus, by combining the molecular dynamics and surface hopping (Dynamix and Surfacehop modules, respectively) functionality of OpenMolcas with QM/MM energy and gradient calculations from GAMESS-US/Tinker, we enabled the NAMD simulations using SSR level for the quantum mechanical treatment of photoresponsive molecular systems.
 
