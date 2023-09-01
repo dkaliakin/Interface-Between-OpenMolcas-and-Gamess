@@ -1,18 +1,24 @@
-# Interface between OpenMolcas and GAMESS-US/Tinker
+# Interface between OpenMOLCAS and GAMESS-US/Tinker
 
-This interface is created to link OpenMolcas and the GAMESS-US/Tinker software packages and enable the state-interaction state-averaged REKS (SI-SA-REKS or, for short, SSR) nonadiabatic molecular dynamics (NAMD) simulations. More specifically, the interface exploits the availability of the SSR energy and analytical gradient in GAMESS-US. Thus, by combining the molecular dynamics and surface hopping (Dynamix and Surfacehop modules, respectively) functionality of OpenMolcas with QM/MM energy and gradient calculations from GAMESS-US/Tinker, we enabled the NAMD simulations using SSR level for the quantum mechanical treatment of photoresponsive molecular systems.
+This interface is created to link OpenMolcas and the GAMESS-US/Tinker software packages and enable the state-interaction state-averaged REKS (SI-SA-REKS or, for short, SSR) nonadibatic molecular dynamics (NAMD) simulations. More specifically, the interface exploits the availability of the SSR energy and analytical gradient in GAMESS-US. Thus, by combining the molecular dynamics and surface hopping (Dynamix and Surfacehop modules, respectively) functionality of OpenMolcas with QM/MM energy and gradient calculations from GAMESS-US/Tinker, we enabled the NAMD simulations using SSR level for the quantum mechanical treatment of photoresponsive molecular systems.
 
-The scripts shared in this repository are specifically designed for parsing SSR(2,2) calculations, which was shown to be performing well in our test calculations. To read about the differences between SSR(3,2) and SSR(2,2) refer to this paper:
+The scripts shared in this repository are specifically designed for parsing SSR(2,2) calcualtions, which was shown to be performing well in our test calculations. To read about the differences between SSR(3,2) and SSR(2,2) refer to this paper:
 
 - Filatov, M.; Lee, S.; Choi, C. H. "Description of Sudden Polarization in the Excited Electronic States with an Ensemble Density Functional Theory Method." _J. Chem. Theory Comput._ **2021**, _17_, 5123–5139. [doi.org/10.1021/acs.jctc.1c00479](https://doi.org/10.1021/acs.jctc.1c00479)
 
-For detailed overview of the REKS method see the paper below:
+For a detailed overview of the REKS method, see the paper below:
 
 - Filatov, M. "Spin-Restricted Ensemble-Referenced Kohn-Sham Method: Basic Principles and Application to Strongly Correlated Ground and Excited States of Molecules." _Wiley Interdiscip. Rev. Comput. Mol. Sci._ **2015**, _5_, 146–167. [doi.org/10.1002/wcms.1209](https://doi.org/10.1002/wcms.1209)
 
-For published example of interface implementation see the paper below:
+The interface utilizes the version of the ESPF method described in the paper below:
 
-- Filatov(Gulak), M.; Paolino, M.; Pierron, R.; Cappelli, A.; Giorgi, G.; Léonard, J.; Huix-rotllant, M.; Ferré, N.; Yang, X.; Kaliakin, D.; Blanco-González, A.; Olivucci, M. "Towards the Engineering of a Photon-Only Two-Stroke Rotary Molecular Motor." Nat. Commun. **2022**, _13_, 6433. [doi.org/10.1038/s41467-022-33695-x](https://doi.org/10.1038/s41467-022-33695-x)
+- Huix-rotllant, M.; Ferré, N. "Analytic Energy, Gradient, and Hessian of Electrostatic Embedding QM/MM Based on Electrostatic Potential-Fitted Atomic Charges Scaling Linearly with the MM Subsystem Size." _J. Chem. Theory Comput._ **2021**, _17_, 538–548. [https://doi.org/10.1021/acs.jctc.0c01075](https://pubs.acs.org/doi/epdf/10.1021/acs.jctc.0c01075)
+
+For publications on the interface application, see the papers below:
+
+- Filatov(Gulak), M.; Paolino, M.; Pierron, R.; Cappelli, A.; Giorgi, G.; Léonard, J.; Huix-rotllant, M.; Ferré, N.; Yang, X.; Kaliakin, D.; Blanco-González, A.; Olivucci, M. "Towards the Engineering of a Photon-Only Two-Stroke Rotary Molecular Motor." _Nat. Commun._ **2022**, _13_, 6433. [doi.org/10.1038/s41467-022-33695-x](https://doi.org/10.1038/s41467-022-33695-x)
+
+- "The OpenMolcas Web: A Community-Driven Approach to Advancing Computational Chemistry" _J. Chem. Theory Comput._ **2023** [doi.org/10.1021/acs.jctc.3c00182](https://pubs.acs.org/doi/10.1021/acs.jctc.3c00182)
 
 # Requirements
 The interface was developed and tested using OpenMolcas without HDF5 library compiled with Intel Fortran, version 2021.3.0 and GAMESS-US compiled with GFortran, version 10.3. The older compilers do not support functionalities that were introduced in modified version of GAMESS-US distributed with this interface. In both cases the MKL libraries were used. We also would like to mention that we have only tested our interface on Linux64 computational clusters using Slurm Workload Manager. We recommend using 6 CPUs per trajectory when target of calculations is smaller system and the computational resources are limited, while 12 CPUs per trajectory is better choice for more computationally demanding systems. The SSR(2,2) method has a good scalability and potentially higher numbers of CPUs per trajectory could be used. However, we encourage you to perform the scalability tests for your system of interest to elucidate the optimal number of CPUs for your particular model.
